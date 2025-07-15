@@ -96,10 +96,10 @@
         <input type="hidden" name="group_id" value="{{ $group->id }}">
 
         @foreach($students as $student)
+            <!-- Talaba ma'lumotlari va inputlar -->
             <div class="bg-white rounded-xl shadow-md p-4 space-y-3 fade-in hover:shadow-lg transition-all">
                 <p class="font-semibold text-lg text-gray-900">{{ $student->name }} (ID: {{ $student->id }})</p>
 
-                <!-- Davomat -->
                 <div class="flex flex-col gap-3">
                     <div class="flex items-center gap-4">
                         <label class="radio-container">
@@ -114,7 +114,6 @@
                     <input type="text" name="students[{{ $student->id }}][attendance_note]" placeholder="Davomat izohi..." class="border rounded-lg px-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-400">
                 </div>
 
-                <!-- Baho -->
                 <div class="flex flex-col gap-3">
                     <div class="flex items-center gap-3">
                         <label class="text-sm text-gray-700 font-medium">Baho:</label>
@@ -132,9 +131,19 @@
         @endforeach
 
         <!-- Saqlash tugmasi -->
-        <button type="submit" class="telegram-btn w-full max-w-xs mx-auto block mt-6">
+        <button type="submit" class="telegram-btn w-full max-w-xs mx-auto block mt-6 relative font-bold">
             ✅ Saqlash
+            @if(session('success'))
+                <span class="text-green-500 absolute top-1 right-3 text-xl font-bold" title="Saqlangan!">✓</span>
+            @endif
         </button>
+
+        <!-- Muvaffaqiyatli xabar -->
+        @if(session('success'))
+            <div class="success-message mt-4 max-w-xs mx-auto text-center">
+                {{ session('success') }}
+            </div>
+        @endif
     </form>
 
     <!-- Pastki navigatsiya -->

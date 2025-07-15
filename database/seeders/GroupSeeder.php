@@ -3,32 +3,32 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Groups;
+use App\Models\Group;
 
 class GroupSeeder extends Seeder
 {
     public function run(): void
     {
-        Groups::insert([
+        Group::insert([
             [
                 'name' => 'Beginner 1',
                 'level' => 'Boshlang‘ich',
-                'attendance_taken' => true,
+                'contact_id' => 1,
             ],
             [
                 'name' => 'Elementary A',
                 'level' => 'Boshlang‘ich o‘rta',
-                'attendance_taken' => false,
+                'contact_id' => 1,
             ],
             [
                 'name' => 'Pre-Intermediate',
                 'level' => 'O‘rta',
-                'attendance_taken' => true,
+                'contact_id' => 1,
             ],
             [
                 'name' => 'Intermediate B',
                 'level' => 'O‘rta yuqori',
-                'attendance_taken' => false,
+                'contact_id' => 1,
             ],
         ]);
     }

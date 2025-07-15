@@ -1,40 +1,59 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
-use App\Models\Groups;
+use App\Models\Group;
 use App\Models\Student;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    public function create($group_id)
+    // Guruhga oid davomat va bahoni kiritish formasi (ko‘rsatish)
+    public function create($groupId)
     {
-        $group = Groups::findOrFail($group_id);
-        $students = Student::where('group_id', $group_id)->get();
+        $group = Group::findOrFail($groupId);
+        $students = $group->students; // relationshipdan foydalanamiz
+
         return view('attendance', compact('group', 'students'));
     }
 
+
+    // Formdan kelgan ma'lumotlarni saqlash
     public function store(Request $request)
     {
+        $data = $request->validate([
+            'group_id' => 'required|exists:groups,id',
+            'students' => 'required|array',
+            'students.*.attendance' => 'required|string',
+            'students.*.attendance_note' => 'nullable|string',
+            'students.*.grade' => 'required|integer|min:1|max:5',
+            'students.*.grade_note' => 'nullable|string',
+        ]);
 
-        $lessonDate = date('Y-m-d');
-
-        foreach ($request->students as $studentId => $data) {
-            Attendance::create([
-                'student_id'        => $studentId,
-                'group_id'          => $request->group_id,
-                'lesson_date'       => $lessonDate,
-                'attendance_status' => $data['attendance'],
-                'attendance_note'   => $data['attendance_note'],
-                'grade'             => $data['grade'],
-                'grade_note'        => $data['grade_note'],
-            ]);
+        foreach ($data['students'] as $studentId => $studentData) {
+            Attendance::updateOrCreate(
+                [
+                    'group_id' => $data['group_id'],
+                    'student_id' => $studentId,
+                ],
+                [
+                    'attendance' => $studentData['attendance'],
+                    'attendance_note' => $studentData['attendance_note'] ?? null,
+                    'grade' => $studentData['grade'],
+                    'grade_note' => $studentData['grade_note'] ?? null,
+                ]
+            );
         }
 
-        return redirect()->back()->with('success', 'Davomat saqlandi!');
+        return redirect()->back()->with('success', 'Davomat va baholar muvaffaqiyatli saqlandi.');
     }
 
+
+    // (Optional) Attendance ro'yxatini ko‘rsatish uchun index()
+    public function index()
+    {
+        $attendances = Attendance::with(['student', 'group'])->get();
+        return view('attendances.index', compact('attendances'));
+    }
 }

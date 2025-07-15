@@ -1,25 +1,15 @@
 <?php
 
-
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Attendance extends Model
+class Debt extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'student_id',
-        'group_id',
-        'lesson_date',
-        'attendance_status',
-        'attendance_note',
-        'grade',
-        'grade_note',
-    ];
+    protected $fillable = ['student_id', 'group_id', 'amount'];
 
     public function student()
     {

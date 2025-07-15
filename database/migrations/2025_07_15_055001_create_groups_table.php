@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('contact_id')
+                ->nullable()
+                ->constrained('contacts')
+                ->onDelete('set null');
             $table->string('name');
             $table->string('level');
-            $table->boolean('attendance_taken')->default(false);
             $table->timestamps();
         });
     }

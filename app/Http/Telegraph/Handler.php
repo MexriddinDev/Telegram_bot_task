@@ -19,7 +19,7 @@ class Handler extends \DefStudio\Telegraph\Handlers\WebhookHandler
     {
         $keyboard = Keyboard::make()
             ->buttons([
-                Button::make('🧩 Web Appni ochish')->webApp('https://43140ee262b1.ngrok-free.app/webapp'),
+                Button::make('🧩 Web Appni ochish')->webApp('https://d227867fee33.ngrok-free.app/webapp'),
             ]);
 
         $this->chat->message("👋 Salom! Botga xush kelibsiz.\n\nQuyidagi tugma orqali Web ilovamizni oching:")

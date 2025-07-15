@@ -21,7 +21,7 @@
         <div class="bg-white rounded-xl shadow p-4 mb-4">
             <div class="flex justify-between items-start">
                 <div>
-                    <a href="{{ route('group.show', $group) }}" class="text-lg font-semibold text-gray-800">{{ $group->name }}</a>
+                    <a href="{{ route('groups.index', $group) }}" class="text-lg font-semibold text-gray-800">{{ $group->name }}</a>
                     <p class="text-sm text-gray-600">Daraja: {{ $group->level }}</p>
                     <p class="text-sm text-gray-600">👥 O‘quvchilar: {{ $group->students_count }}</p>
 
@@ -33,7 +33,7 @@
                 </div>
 
                 @if($group->attendance_taken)
-                    <a href="{{ route('group.show', $group) }}" class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 mt-1">Ko‘rish</a>
+                    <a href="{{ route('students.index', $group) }}" class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 mt-1">Ko‘rish</a>
                 @else
                     <a href="{{ route('attendance.create', $group->id) }}" class="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 mt-1">Davomat olish</a>
                 @endif

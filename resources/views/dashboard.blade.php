@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="text-right">
-                    <a href="{{ route('group.show', $group['id']) }}"
+                    <a href="{{ route('groups.index', $group['id']) }}"
                        class="text-white bg-blue-500 text-sm px-3 py-1 rounded hover:bg-blue-600 inline-block mt-1">
                         Ko‘rish
                     </a>

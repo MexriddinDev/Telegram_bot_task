@@ -2,31 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Groups;
-use App\Models\Attendance;
+use App\Models\Group;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $todayGroups = Groups::with('students')->get(); // Aslida bu yerni date bo‘yicha filterlash kerak bo'lishi mumkin
+        // Barcha guruhlar bilan birga ularning talabalarini va dars sanalarini chaqiramiz
+        $groups = Group::with(['students', 'attendanceDates', 'attendances'])->get();
 
         $groupData = [];
 
-        foreach ($todayGroups as $group) {
-            $studentCount = $group->students->count();
+        foreach ($groups as $group) {
+            // Guruhga tegishli eng so‘nggi dars sanasini topamiz
+            $latestLesson = $group->attendanceDates
+                ->sortByDesc('lesson_date')
+                ->first();
 
-            $attendanceTaken = Attendance::where('group_id', $group->id)
-                ->whereDate('lesson_date', date('Y-m-d'))
-                ->exists();
+            // Bugungi sana uchun davomat bor-yo‘qligini tekshiramiz
+            $hasTodayAttendance = $group->attendances
+                ->where('lesson_date', now()->toDateString())
+                ->isNotEmpty();
 
             $groupData[] = [
-                'name' => $group->name,
-                'students' => $studentCount,
-                'attendance' => $attendanceTaken,
-                'time' => '08:00', // Hozircha statik, kerak bo‘lsa dars vaqti ustuni qo‘shiladi
                 'id' => $group->id,
+                'name' => $group->name,
+                'students' => $group->students->count(),
+                'attendance' => $hasTodayAttendance,
+                'time' => optional($latestLesson)->lesson_date ?? 'Nomaʼlum vaqt',
             ];
         }
 

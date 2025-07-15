@@ -15,8 +15,13 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         $this->call([
+            ContactSeeder::class,
             GroupSeeder::class,
             StudentSeeder::class,
+            GroupStudentSeeder::class,
+            DebtSeeder::class,
+            AttendanceSeeder::class,
+            GroupAttendanceDateSeeder::class,
             // Add other seeders here as needed
         ]);
 
