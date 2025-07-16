@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroupsController;
+use App\Http\Controllers\TelegramBotController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\StudentController;
@@ -12,6 +13,12 @@ use App\Http\Controllers\GroupAttendanceDateController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+//Route::post('/telegram/webhook', [TelegramBotController::class, 'handleWebhook']);
+//Route::get('/telegram/webhook', [TelegramBotController::class, 'handleWebhook']);
+
+
+
 Route::get('/webapp', [DashboardController::class, 'index']);
 Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
 Route::get('/groups', [GroupsController::class, 'index'])->name('groups.index');

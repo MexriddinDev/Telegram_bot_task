@@ -14,7 +14,7 @@ class ContactSeeder extends Seeder
                 'phone_number' => '+998944866308',
                 'username' => 'Mexriddin_Nuriddinov',
                 'telegram_id' => 1184585040,
-            ],
+            ]
 
 
         ]);
