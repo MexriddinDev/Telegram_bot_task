@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Contact extends Model
+class Contact extends Authenticatable
 {
     use HasFactory;
 
@@ -15,9 +16,15 @@ class Contact extends Model
         'telegram_id',
     ];
 
-    // Bitta contactda bir nechta group bo'lishi mumkin
     public function groups()
     {
-        return $this->hasMany(Group::class);
+        return $this->hasMany(Group::class, 'contact_id', 'id');
     }
+
+    public function getAuthPassword()
+    {
+        return '';
+    }
+
+
 }

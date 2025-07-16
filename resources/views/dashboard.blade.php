@@ -10,19 +10,16 @@
 
 <div class="max-w-xl mx-auto min-h-screen pb-24">
 
-    <!-- Header -->
     <div class="bg-blue-600 text-white p-5 rounded-b-3xl">
         <h1 class="text-xl font-semibold">🌞 Xayrli tong</h1>
         <p class="text-sm">Uzaqova Sevara!</p>
         <div class="flex space-x-3 mt-4">
-            <!-- Bugungi guruhlar -->
             <a href="#" class="w-1/2">
                 <div class="w-full p-4 bg-white bg-opacity-20 rounded-xl text-center border border-white border-opacity-30">
                     <p class="text-sm">📚 Bugungi guruhlar</p>
                     <p class="text-lg font-bold">{{ $groupsCount }}</p>
                 </div>
             </a>
-            <!-- Davomat olingan -->
             <a href="#" class="w-1/2">
                 <div class="w-full p-4 bg-white bg-opacity-20 rounded-xl text-center border border-white border-opacity-30">
                     <p class="text-sm">✅ Davomat olingan</p>
@@ -32,7 +29,6 @@
         </div>
     </div>
 
-    <!-- Darslar -->
     <div class="p-4">
         <h2 class="text-lg font-semibold mt-4 mb-3">📅 Bugungi darslar</h2>
 
@@ -53,13 +49,11 @@
             </div>
         @endforeach
 
-        <!-- Maslahat -->
         <div class="bg-blue-100 text-blue-800 text-sm p-4 rounded-xl mt-5">
             💡 Maslahat: Darsdan keyin o‘quvchilar bilan individual ish olib boring.
         </div>
     </div>
 
-    <!-- Footer Navigation -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 shadow-md z-50">
         <a href="/webapp" class="flex flex-col items-center text-blue-600 hover:text-blue-800 transition duration-150">
             <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-1">

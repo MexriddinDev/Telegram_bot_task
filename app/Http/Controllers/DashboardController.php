@@ -2,25 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contact;
 use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Barcha guruhlar bilan birga ularning talabalarini va dars sanalarini chaqiramiz
-        $groups = Group::with(['students', 'attendanceDates', 'attendances'])->get();
+        if(Auth::check()){
+            $user = Auth::user();
+        }else{
+            $user = Contact::where('telegram_id', $request->contact_id)->first();
+
+        }
+
+        Auth::login($user);
+        $authUser = Auth::user();
+        $groups = Group::with(['students', 'attendanceDates', 'attendances'])->where('contact_id', $authUser->id)->get();
 
         $groupData = [];
 
         foreach ($groups as $group) {
-            // Guruhga tegishli eng so‘nggi dars sanasini topamiz
             $latestLesson = $group->attendanceDates
                 ->sortByDesc('lesson_date')
                 ->first();
 
-            // Bugungi sana uchun davomat bor-yo‘qligini tekshiramiz
             $hasTodayAttendance = $group->attendances
                 ->where('lesson_date', now()->toDateString())
                 ->isNotEmpty();

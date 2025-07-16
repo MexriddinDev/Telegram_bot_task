@@ -9,17 +9,15 @@ use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
-    // Guruhga oid davomat va bahoni kiritish formasi (ko‘rsatish)
     public function create($groupId)
     {
         $group = Group::findOrFail($groupId);
-        $students = $group->students; // relationshipdan foydalanamiz
+        $students = $group->students;
 
         return view('attendance', compact('group', 'students'));
     }
 
 
-    // Formdan kelgan ma'lumotlarni saqlash
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -50,7 +48,6 @@ class AttendanceController extends Controller
     }
 
 
-    // (Optional) Attendance ro'yxatini ko‘rsatish uchun index()
     public function index()
     {
         $attendances = Attendance::with(['student', 'group'])->get();

@@ -5,55 +5,89 @@ namespace App\Http\Telegraph;
 use App\Models\Contact;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\DTO\Contact as TelegramContact;
+use DefStudio\Telegraph\Keyboard\Button;
+use DefStudio\Telegraph\Keyboard\Keyboard;
 use DefStudio\Telegraph\Keyboard\ReplyButton;
 use DefStudio\Telegraph\Keyboard\ReplyKeyboard;
+use Illuminate\Support\Facades\Log;
 
 class StartHandler extends WebhookHandler
 {
     public function start(): void
     {
-        $keyboard = ReplyKeyboard::make()
+        $replyKeyboard = ReplyKeyboard::make()
             ->buttons([
-                ReplyButton::make('📞 Kontakt yuborish')->requestContact(),
+                ReplyButton::make('📱 Raqamni ulashish')->requestContact(),
             ])
-            ->resize()
-            ->oneTime();
+            ->resize();
 
-        $this->chat->message("👋 Salom! Botga xush kelibsiz.\n\nIltimos, quyidagi tugma orqali telefon raqamingizni yuboring:")
-            ->replyKeyboard($keyboard)
+        $this->chat->message("👋 Salom! Botga xush kelibsiz!\n\nIltimos, raqamingizni ulashing:")
+            ->replyKeyboard($replyKeyboard)
             ->send();
     }
 
-    protected function handleContact(TelegramContact $telegramContact): void
+    public function handleChatMessage($message = null): void
     {
-        // Telefon raqamini olish
-        $phoneNumber = $telegramContact->phoneNumber();
+        Log::debug('Kelib tushgan webhook:', $this->data->toArray());
 
-        // Telefon raqamini validatsiya qilish (faqat raqamlar va '+' belgisi)
-        if (!$this->isValidPhoneNumber($phoneNumber)) {
-            $this->chat->message("❌ Iltimos, to‘g‘ri telefon raqamini yuboring (masalan, +998901234567). Harf yoki boshqa belgilar ishlatmang.")
-                ->send();
-            return;
-        }
+        try {
+            $contact = $this->message->contact();
+            $telegramId = $this->message->from()->id();
+            if ($contact !== null) {
+                $phoneNumber = $contact->phoneNumber();
 
-        // Bazada telefon raqamini tekshirish
-        $contact = Contact::where('phone_number', $phoneNumber)->first();
+                if ($phoneNumber) {
+                    Log::info('Raqam qayta ishlanmoqda: ' . $phoneNumber);
 
-        if ($contact) {
-            // Agar raqam bazada bo‘lsa, veb-sayt URL manziliga yo‘naltirish
-            $webUrl = 'https://b8b7449811ad.ngrok-free.app/'; // O‘zingizning URL manzilingizni qo‘ying
-            $this->chat->message("✅ Telefon raqamingiz tasdiqlandi! Quyidagi havolaga o‘ting:\n\n{$webUrl}")
-                ->send();
-        } else {
-            // Agar raqam bazada bo‘lmasa, xato xabari
-            $this->chat->message("❌ Telefon raqamingiz bazada topilmadi. Iltimos, to‘g‘ri raqam yuboring yoki administrator bilan bog‘laning.")
+                    $cleanPhoneNumber = str_replace([' ', '+'], '', $phoneNumber);
+                    Log::info('phone number : ' . $cleanPhoneNumber);;
+                    $validContact = Contact::where('phone_number', $cleanPhoneNumber)->first();
+
+
+
+                    if ($validContact) {
+
+                        $validContact->telegram_id = $telegramId;
+                        $validContact->save();
+
+                        $webUrl = 'https://6920043fbe91.ngrok-free.app/webapp?contact_id=' . $telegramId;
+
+                        $keyboard = Keyboard::make()
+                            ->buttons([
+                                Button::make('🌐 Web Appni ochish')->webApp($webUrl),
+                            ]);
+
+                        $this->chat->message("✅ Raqamingiz tasdiqlandi!\n\nQuyidagi tugma orqali Web App'ni ochishingiz mumkin:")
+                            ->keyboard($keyboard)
+                            ->send();
+                    } else {
+                        Log::warning('  Noto‘g‘ri raqam urinish: ' . $phoneNumber);
+                        $this->chat->message("❌ Kechirasiz, sizning raqamingiz tizimda topilmadi.")
+                            ->send();
+                    }
+                }
+            } else {
+                Log::debug('Contact maʼlumotlari mavjud emas.');
+
+                if (!$this->message->text() || !str_starts_with($this->message->text(), '/')) {
+                    $replyKeyboard = ReplyKeyboard::make()
+                        ->buttons([
+                            ReplyButton::make('📱 Raqamni ulashish')->requestContact(),
+                        ])
+                        ->resize();
+
+                    $this->chat->message("📲 Iltimos, raqamingizni ulashing:")
+                        ->replyKeyboard($replyKeyboard)
+                        ->send();
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('Xatolik yuz berdi: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+
+            $this->chat->message("⚠️ Xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.")
                 ->send();
         }
     }
 
-    private function isValidPhoneNumber(string $phoneNumber): bool
-    {
-        // Telefon raqami faqat raqamlar va '+' belgidan iborat bo‘lishi kerak
-        return preg_match('/^\+?[1-9]\d{1,14}$/', $phoneNumber);
-    }
 }

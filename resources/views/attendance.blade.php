@@ -73,7 +73,6 @@
       style="width: 100%; max-width: 400px; margin: 0 auto; padding: 0;">
 <div class="w-full min-h-screen">
 
-    <!-- Header -->
     <div class="bg-blue-600 text-white p-4 rounded-b-2xl shadow-md">
         <h1 class="text-xl font-bold flex items-center gap-2">
             <span class="text-yellow-300">📋</span>
@@ -83,7 +82,6 @@
         <p class="text-xs text-blue-200 mt-1">📅 {{ now()->format('d.m.Y, h:i A') }}</p>
     </div>
 
-    <!-- Muvaffaqiyat xabari -->
     @if(session('success'))
         <div class="success-message">
             {{ session('success') }}
@@ -96,7 +94,6 @@
         <input type="hidden" name="group_id" value="{{ $group->id }}">
 
         @foreach($students as $student)
-            <!-- Talaba ma'lumotlari va inputlar -->
             <div class="bg-white rounded-xl shadow-md p-4 space-y-3 fade-in hover:shadow-lg transition-all">
                 <p class="font-semibold text-lg text-gray-900">{{ $student->name }} (ID: {{ $student->id }})</p>
 
@@ -130,7 +127,6 @@
             </div>
         @endforeach
 
-        <!-- Saqlash tugmasi -->
         <button type="submit" class="telegram-btn w-full max-w-xs mx-auto block mt-6 relative font-bold">
             ✅ Saqlash
             @if(session('success'))
@@ -138,7 +134,6 @@
             @endif
         </button>
 
-        <!-- Muvaffaqiyatli xabar -->
         @if(session('success'))
             <div class="success-message mt-4 max-w-xs mx-auto text-center">
                 {{ session('success') }}
@@ -146,7 +141,6 @@
         @endif
     </form>
 
-    <!-- Pastki navigatsiya -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 shadow-md z-50">
         <a href="/webapp" class="flex flex-col items-center text-blue-600 hover:text-blue-800 transition duration-150">
             <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-1">

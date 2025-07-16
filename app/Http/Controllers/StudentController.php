@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    // O‘quvchilar ro‘yxatini ko‘rsatish
     public function index($id)
     {
         $group = Group::with([
@@ -25,14 +24,12 @@ class StudentController extends Controller
     }
 
 
-    // Yangi o‘quvchi qo‘shish formasi
     public function create()
     {
-        $groups = Group::all(); // Guruhlar ro‘yxati tanlash uchun
+        $groups = Group::all();
         return view('students.create', compact('groups'));
     }
 
-    // Yangi o‘quvchini saqlash
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -51,14 +48,12 @@ class StudentController extends Controller
         return redirect()->route('students.index')->with('success', 'O‘quvchi qo‘shildi');
     }
 
-    // O‘quvchini ko‘rsatish
     public function show($id)
     {
         $student = Student::with('groups')->findOrFail($id);
         return view('students.show', compact('student'));
     }
 
-    // Tahrirlash formasi
     public function edit($id)
     {
         $student = Student::findOrFail($id);
@@ -66,7 +61,6 @@ class StudentController extends Controller
         return view('students.edit', compact('student', 'groups'));
     }
 
-    // Yangilash
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -83,7 +77,6 @@ class StudentController extends Controller
         return redirect()->route('students.index')->with('success', 'O‘quvchi yangilandi');
     }
 
-    // O‘chirish
     public function destroy($id)
     {
         $student = Student::findOrFail($id);

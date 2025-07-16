@@ -10,13 +10,11 @@
 
 <div class="max-w-xl mx-auto px-4 py-5 pb-24">
 
-    <!-- Header -->
     <div class="mb-4">
         <h1 class="text-2xl font-bold text-blue-600">👥 Guruhlar ro'yxati</h1>
         <p class="text-sm text-gray-600">Bugungi darslar uchun guruhlar</p>
     </div>
 
-    <!-- Guruhlar ro'yxati -->
     @foreach ($groups as $group)
         <div class="bg-white rounded-xl shadow p-4 mb-4">
             <div class="flex justify-between items-start">
@@ -41,7 +39,6 @@
         </div>
     @endforeach
 
-    <!-- Pastki navigatsiya -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 shadow-md z-50">
         <a href="/webapp" class="flex flex-col items-center text-blue-600 hover:text-blue-800 transition duration-150">
             <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-1">

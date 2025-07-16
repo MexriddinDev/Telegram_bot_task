@@ -2,27 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contact;
 use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GroupsController extends Controller
 {
-    // Guruhlar ro‘yxati
-    public function index()
+    public function index(Request $request)
     {
-        // Guruhlar bilan birga bog‘langan o‘quvchilar va kontaktni yuklaymiz
+        if (Auth::check()) {
+            $user = Auth::user();
+        } else {
+            $user = Contact::where('telegram_id', $request->contact_id)->first();
+
+            if (!$user) {
+                abort(403, 'Foydalanuvchi topilmadi');
+            }
+
+            Auth::login($user);
+        }
+
         $groups = Group::with(['students', 'contact', 'attendanceDates'])
+            ->where('contact_id', $user->id)
             ->get()
             ->map(function ($group) {
-                // Har bir guruhga o‘quvchilar sonini qo‘shamiz
                 $group->students_count = $group->students->count();
 
-                // Guruhga tegishli eng so‘nggi dars sanasini topamiz
                 $latestAttendance = $group->attendanceDates
                     ->sortByDesc('lesson_date')
                     ->first();
 
-                // Davomat olinganmi-yo‘qmi
                 $group->attendance_taken = $latestAttendance?->attendance_taken ?? false;
 
                 return $group;
@@ -31,12 +41,11 @@ class GroupsController extends Controller
         return view('groups', compact('groups'));
     }
 
-    // Bitta guruh tafsiloti
+
     public function show($id)
     {
         $group = Group::with(['students', 'contact', 'attendanceDates', 'attendances', 'debts'])->findOrFail($id);
 
-        // O‘quvchilarni hisoblab statistik ma’lumotlar tayyorlaymiz
         $activeCount = $group->students->where('active', true)->count();
         $debtorsCount = $group->students->filter(fn($s) => $s->debt > 0)->count();
         $totalDebt = $group->students->sum('debt');
