@@ -27,7 +27,7 @@ This is a Laravel-based Telegram-integrated application for managing student gro
 ## ⚙️ Installation
 
 ```bash
-git clone https://github.com/your-username/your-project.git
+git clone https://github.com/MexriddinDev/Telegram_bot_task
 cd your-project
 composer install
 cp .env.example .env
